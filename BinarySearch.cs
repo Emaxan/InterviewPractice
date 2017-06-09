@@ -16,7 +16,7 @@
             int first = 0, last = array.Length;
 
             while(last > first) {
-                var middle = first + (last - first)/2;
+                int middle = first + (last - first)/2;
 
                 if(increase)
                     if(array[middle] >= element) last = middle;

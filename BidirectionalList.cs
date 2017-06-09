@@ -74,10 +74,10 @@ namespace InterviewPractice {
         public int AddToEnd(long number) {
             if(Count == MemoryCount) Resize(MemoryCount*2);
 
-            var emptyElement = EmptyElement();
+            int? emptyElement = EmptyElement();
             if(!emptyElement.HasValue) throw new Exception("Can't found empty element.");
 
-            var lastElement = LastElement();
+            int? lastElement = LastElement();
             if(lastElement.HasValue) {
                 _array[Next][lastElement.Value] = emptyElement;
                 _array[Prev][emptyElement.Value] = lastElement;
@@ -121,7 +121,7 @@ namespace InterviewPractice {
             Count = 0;
             MemoryCount = 0;
             _array = new long?[3][];
-            for(var i = 0; i < 3; i++)
+            for(int i = 0; i < 3; i++)
                 _array[i] = new long?[0];
         }
 
@@ -130,11 +130,11 @@ namespace InterviewPractice {
         /// </summary>
         /// <param name="newSize">New count of element to allocate memory.</param>
         private void Resize(int newSize) {
-            var oldCount = MemoryCount;
+            int oldCount = MemoryCount;
             if(newSize == 0) newSize = 1;
-            for(var i = 0; i < 3; i++) {
+            for(int i = 0; i < 3; i++) {
                 Array.Resize(ref _array[i], newSize);
-                for(var j = oldCount; j < newSize; j++)
+                for(int j = oldCount; j < newSize; j++)
                     _array[i][j] = null;
             }
             MemoryCount = newSize;
@@ -145,7 +145,7 @@ namespace InterviewPractice {
         /// </summary>
         /// <returns>Index of first empty element in memory or null if it no such elements.</returns>
         private int? EmptyElement() {
-            for(var i = 0; i < MemoryCount; i++) {
+            for(int i = 0; i < MemoryCount; i++) {
                 if(_array[Value][i] == null) return i;
             }
             return null;
@@ -157,7 +157,7 @@ namespace InterviewPractice {
         /// <returns>Index of last element or null if list is empty.</returns>
         private int? LastElement() {
             if(_startIndex == null) return null;
-            var index = (int) _startIndex;
+            int index = (int) _startIndex;
             while(_array[Next][index] != null)
                 index = (int) _array[Next][index];
             return index;
