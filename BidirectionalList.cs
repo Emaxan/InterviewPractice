@@ -3,9 +3,9 @@ using System.Collections;
 
 namespace InterviewPractice {
     public class BidirectionalList: IEnumerable {
+        private const int Next = 2, Prev = 1, Value = 0;
         private long?[][] _array;
         private int? _startIndex;
-        private const int Next = 2, Prev = 1, Value = 0;
 
         /// <summary>
         ///     Initialize new list.
@@ -28,7 +28,7 @@ namespace InterviewPractice {
         private int MemoryCount{ get; set; }
 
         /// <summary>
-        /// Get enumerator for using list in foreach.
+        ///     Get enumerator for using list in foreach.
         /// </summary>
         /// <returns>Enumerator of list.</returns>
         public IEnumerator GetEnumerator() {
@@ -105,9 +105,9 @@ namespace InterviewPractice {
                 return true;
             }
             if(_array[Prev][index].HasValue)
-                _array[Next][(int)_array[Prev][index]] = _array[Next][index];
+                _array[Next][(int) _array[Prev][index]] = _array[Next][index];
             if(_array[Next][index].HasValue)
-                _array[Prev][(int)_array[Next][index]] = _array[Prev][index];
+                _array[Prev][(int) _array[Next][index]] = _array[Prev][index];
             _array[Value][index] = null;
             Count--;
             return true;
