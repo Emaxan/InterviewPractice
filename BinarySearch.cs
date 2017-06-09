@@ -1,31 +1,28 @@
 ﻿namespace InterviewPractice {
     public static class BinarySearch {
         /// <summary>
-        /// Бинарный поиск в отсортированном массиве.
+        ///     Binary search in sorted array.
         /// </summary>
-        /// <param name="array">Отсортированный массив типа int[]</param>
-        /// <param name="element">Искомый элемент.</param>
-        /// <param name="increase">True если массив отсортирован по возрастанию, false в противном случае. По умолчанию true.</param>
-        /// <returns>Возвращает индекс искомого элемента либо null, если элемент не найден.</returns>
+        /// <param name="array">Sorted array of type int[]</param>
+        /// <param name="element">Target element.</param>
+        /// <param name="increase">True if array sorted by increasing, false if sorted by decreasing. Default true.</param>
+        /// <returns>Index of target element or null if there are no such element in array.</returns>
         public static int? Search(int element, int[] array, bool increase = true) {
             if(increase) {
                 if((array.Length < 0) || (element < array[0]) || (element > array[array.Length - 1])) return null;
             }
-            else {
-                if((array.Length < 0) || (element > array[0]) || (element < array[array.Length - 1])) return null;
-            }
+            else if((array.Length < 0) || (element > array[0]) || (element < array[array.Length - 1])) return null;
 
             int first = 0, last = array.Length;
 
             while(last > first) {
-                int middle = first + (last - first)/2;
+                var middle = first + (last - first)/2;
 
                 if(increase)
-                    if (array[middle] >= element) last = middle;
+                    if(array[middle] >= element) last = middle;
                     else first = middle + 1;
-                else
-                    if (array[middle] <= element) last = middle;
-                    else first = middle + 1;
+                else if(array[middle] <= element) last = middle;
+                else first = middle + 1;
             }
 
             if(array[last] == element) return last;
