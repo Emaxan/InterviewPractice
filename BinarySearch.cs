@@ -18,10 +18,11 @@
             while(last > first) {
                 int middle = first + (last - first)/2;
 
+                if(array[middle] == element) return middle;
                 if(increase)
-                    if(array[middle] >= element) last = middle;
+                    if(array[middle] > element) last = middle;
                     else first = middle + 1;
-                else if(array[middle] <= element) last = middle;
+                else if(array[middle] < element) last = middle;
                 else first = middle + 1;
             }
 

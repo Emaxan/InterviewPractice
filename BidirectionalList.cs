@@ -3,8 +3,8 @@ using System.Collections;
 
 namespace InterviewPractice {
     public class BidirectionalList: IEnumerable {
-        private const int Next = 2, Prev = 1, Value = 0;
-        private long?[][] _array;
+        private long?[] _value;
+        private int?[] _next, _prev;
         private int? _startIndex;
 
         /// <summary>
@@ -34,10 +34,10 @@ namespace InterviewPractice {
         public IEnumerator GetEnumerator() {
             if(!_startIndex.HasValue) yield break;
             int index = _startIndex.Value;
-            while(_array[Value][index].HasValue) {
-                long number = _array[Value][index].Value;
-                if(_array[Next][index].HasValue) {
-                    index = (int) _array[Next][index];
+            while(_value[index].HasValue) {
+                long number = _value[index].Value;
+                if(_next[index].HasValue) {
+                    index = (int) _next[index];
                     yield return number;
                 }
                 else {
@@ -57,10 +57,10 @@ namespace InterviewPractice {
             int? emptyElement = EmptyElement();
             if(!emptyElement.HasValue) throw new Exception("Can't found empty element.");
 
-            _array[Value][emptyElement.Value] = number;
+            _value[emptyElement.Value] = number;
             if(_startIndex.HasValue) {
-                _array[Prev][_startIndex.Value] = emptyElement;
-                _array[Next][emptyElement.Value] = _startIndex;
+                _prev[_startIndex.Value] = emptyElement;
+                _next[emptyElement.Value] = _startIndex;
             }
             _startIndex = emptyElement;
             Count++;
@@ -79,12 +79,12 @@ namespace InterviewPractice {
 
             int? lastElement = LastElement();
             if(lastElement.HasValue) {
-                _array[Next][lastElement.Value] = emptyElement;
-                _array[Prev][emptyElement.Value] = lastElement;
+                _next[lastElement.Value] = emptyElement;
+                _prev[emptyElement.Value] = lastElement;
             }
             else _startIndex = emptyElement;
 
-            _array[Value][(int) emptyElement] = number;
+            _value[(int) emptyElement] = number;
             Count++;
             return emptyElement.Value;
         }
@@ -97,18 +97,18 @@ namespace InterviewPractice {
         public bool Remove(long number) {
             if(!_startIndex.HasValue) return false;
             int index = _startIndex.Value;
-            while((_array[Next][index] != null) && (_array[Value][index] != number))
-                index = (int) _array[Next][index];
-            if(_array[Value][index] != number) return false;
+            while((_next[index] != null) && (_value[index] != number))
+                index = (int) _next[index];
+            if(_value[index] != number) return false;
             if(Count == 1) {
                 Clear();
                 return true;
             }
-            if(_array[Prev][index].HasValue)
-                _array[Next][(int) _array[Prev][index]] = _array[Next][index];
-            if(_array[Next][index].HasValue)
-                _array[Prev][(int) _array[Next][index]] = _array[Prev][index];
-            _array[Value][index] = null;
+            if(_prev[index].HasValue)
+                _next[(int) _prev[index]] = _next[index];
+            if(_next[index].HasValue)
+                _prev[(int) _next[index]] = _prev[index];
+            _value[index] = null;
             Count--;
             return true;
         }
@@ -120,9 +120,9 @@ namespace InterviewPractice {
             _startIndex = null;
             Count = 0;
             MemoryCount = 0;
-            _array = new long?[3][];
-            for(int i = 0; i < 3; i++)
-                _array[i] = new long?[0];
+            _value = new long?[0];
+            _next = new int?[0];
+            _prev = new int?[0];
         }
 
         /// <summary>
@@ -132,11 +132,12 @@ namespace InterviewPractice {
         private void Resize(int newSize) {
             int oldCount = MemoryCount;
             if(newSize == 0) newSize = 1;
-            for(int i = 0; i < 3; i++) {
-                Array.Resize(ref _array[i], newSize);
-                for(int j = oldCount; j < newSize; j++)
-                    _array[i][j] = null;
-            }
+            Array.Resize(ref _value, newSize);
+            for (int j = oldCount; j < newSize; j++) _value[j] = null;
+            Array.Resize(ref _next, newSize);
+            for (int j = oldCount; j < newSize; j++) _next[j] = null;
+            Array.Resize(ref _prev, newSize);
+            for (int j = oldCount; j < newSize; j++) _prev[j] = null;
             MemoryCount = newSize;
         }
 
@@ -146,7 +147,7 @@ namespace InterviewPractice {
         /// <returns>Index of first empty element in memory or null if it no such elements.</returns>
         private int? EmptyElement() {
             for(int i = 0; i < MemoryCount; i++) {
-                if(_array[Value][i] == null) return i;
+                if(_value[i] == null) return i;
             }
             return null;
         }
@@ -158,8 +159,8 @@ namespace InterviewPractice {
         private int? LastElement() {
             if(_startIndex == null) return null;
             int index = (int) _startIndex;
-            while(_array[Next][index] != null)
-                index = (int) _array[Next][index];
+            while(_next[index] != null)
+                index = (int) _next[index];
             return index;
         }
     }
